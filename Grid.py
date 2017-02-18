@@ -1,12 +1,13 @@
 import Square
 
+
 class Grid:
     """
     Main class for the mansion cleaning game.
     """
     instance = None
     sudoku = None
-    constraints = None
+    constraints = []
 
     def __init__(self):
         """
@@ -14,7 +15,6 @@ class Grid:
         """
         if not self.instance:
             self.instance = self
-
         self.construct_constraints()
 
     def get_grid(self):
@@ -30,11 +30,11 @@ class Grid:
         # TODO vérifier (algo qui transforme le texte en sudoku)
         matrix = None
         e = 0
-        if len(text) > 81:
+        if len(text) > 81:  # TODO est-ce que c'est len() pour un texte?
             return False
         for j in range(0, 9):
             for i in range(0, 9):
-                if text[e] in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
+                if text[e] in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
                     matrix[j][i] = text[e]
                 else:
                     matrix[j][i] = None
@@ -42,15 +42,62 @@ class Grid:
         self.sudoku = matrix
         return True
 
-  #  def construct_constraints(self):
-  #      """
-  #      Fill the constraints list with all the grid constraints
-  #      """
-  #      constraints = []
-  #      for j in range(0, 9):
-  #          for i in range(0, 9):
-  #              line = get_column_list(j)
-  #              constraints += get_line_list(i)
+    def calculate(self):
+        """
+        Calculation to solve the sudoku problem
+        """
+        # TODO ajouter backtracking_search, ac-3 et tout le reste pour effectuer le calcul
+
+    def construct_constraints(self):
+        """
+        Fill the constraints list with all the grid constraints
+        """
+        constraints_list = []
+        # TODO Décommenter et mettre à jour les lignes qui suivent
+        """
+        for j in range(0, 9):
+            for i in range(0, 9):
+
+                # Add column constraints
+                for y in range(0, j):
+                    constraints_list.append([[j, i], [y, i]])
+                for y in range(j + 1, 9):
+                    constraints_list.append([[j, i], [y, i]])
+
+                # Add line constraints
+                for x in range(0, i):
+                    constraints_list.append([[j, i], [j, x]])
+                for x in range(i + 1, 9):
+                    constraints_list.append([[j, i], [j, x]])
+
+                # Add sub-grid remaining squares
+                if i <= 2:  # First column-set
+                    if j <= 2:  # First line-set
+
+                    elif j <=5:  # Second line-set
+
+                    else:  # Third line-set
+
+                elif i <=5:  # Second column-set
+                    if j <= 2:  # First line-set
+
+                    elif j <= 5:  # Second line-set
+
+                    else:  # Third line-set
+
+                else:  # Third column-set
+                    if j <= 2:  # First line-set
+
+                    elif j <= 5:  # Second line-set
+
+                    else:  # Third line-set
+
+                sub_grid = self.get_sub_grid_constraints_list(j, i)
+                for sub_grid_square in sub_grid:
+                    set = [[j, i], sub_grid_square]
+                    if set not in constraints_list:
+                        constraints_list.append(set)
+        self.constraints = constraints_list"""
 
     def print_sudoku(self):
         """
@@ -104,8 +151,8 @@ class Grid:
         :param i: the x position into the grid
         :return: the string value of the square
         """
-        case = self.sudoku[j][i]
-        if case:  # There is a value into the case
-            return case
+        square = self.sudoku[j][i]
+        if square:  # There is a value into the square
+            return square
         else:
             return '.'

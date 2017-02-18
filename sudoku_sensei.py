@@ -6,18 +6,18 @@ import time
 def intro():
 
     step1 = """ \n \n
-      sSSs   .S       S.    .S_sSSs      sSSs_sSSs     .S    S.    .S       S.
-     d%%SP  .SS       SS.  .SS~YS%%b    d%%SP~YS%%b   .SS    SS.  .SS       SS.
+      sSSs   .S       S.    .S%%Ss        sSS%SSs      .S     S.   .S       S.
+     d%%SP  .SS       SS.  .SS~YS%%b    d%%SP~YS%%b   .SS    .SS  .SS       SS.
     d%S'    S%S       S%S  S%S   `S%b  d%S'     `S%b  S%S    S&S  S%S       S%S
     S%|     S%S       S%S  S%S    S%S  S%S       S%S  S%S    d*S  S%S       S%S
-    S&S     S&S       S&S  S%S    S&S  S&S       S&S  S&S   .S*S  S&S       S&S
-    Y&Ss    S&S       S&S  S&S    S&S  S&S       S&S  S&S_sdSSS   S&S       S&S
+    S&S     S&S       S&S  S%S    S&S  S&S       S&S  S&S   .S*'  S&S       S&S
+    Y&Ss    S&S       S&S  S&S    S&S  S&S       S&S  S&S_sdSS'   S&S       S&S
     `S&&S   S&S       S&S  S&S    S&S  S&S       S&S  S&S~YSSY%b  S&S       S&S
       `S*S  S&S       S&S  S&S    S&S  S&S       S&S  S&S    `S%  S&S       S&S
        l*S  S*b       d*S  S*S    d*S  S*b       d*S  S*S     S%  S*b       d*S
       .S*P  S*S.     .S*S  S*S   .S*S  S*S.     .S*S  S*S     S&  S*S.     .S*S
     sSS*S    SSSbs_sdSSS   S*S_sdSSS    SSSbs_sdSSS   S*S     S&   SSSbs_sdSSS
-    YSS'      YSSP~YSSY    SSS~YSSY      YSSP~YSSY    S*S     YSb   YSSP~YSSY
+    YSS'      'YSS%SSY'    SSS~YSY       'YSS%SSY'    S*S     YSb.  'YSS%SSY'
 """
     step2 = step1 + """ \n
           sSSs    sSSs   .S_sSSs      sSSs    sSSs   .S
@@ -50,7 +50,7 @@ def main():
     # Display the start sudoku
     grid.print_sudoku()
     # Ikuzo!
-    grid.start_calculation()
+    grid.calculate()
     # Display the resolved sudoku
     grid.print_sudoku()
 
