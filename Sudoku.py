@@ -1,20 +1,27 @@
-from collections import OrderedDict
+import Tree
 
-class Sudoku :
+
+class Sudoku:
 
     __sudoku = []
 
-    def __init__(self, filename):
-        file = open(filename, "r")
-        if file:
-            for a_line in file.readlines():
-                tmp = []
+    def __init__(self, source):
 
-                for a_char in a_line:
-                    if a_char != "\n":
-                        tmp.append(a_char)
+        if type(source) is list:
+            self.__sudoku = source
+        else:
+            file = open(source, "r")
+            if file:
+                for a_line in file.readlines():
+                    tmp = []
 
-                self.__sudoku.append(tmp)
+                    for a_char in a_line:
+                        if a_char != "\n":
+                            tmp.append(a_char)
+
+                    self.__sudoku.append(tmp)
+            else:
+                exit("File doesn't exists")
 
     def print_sudoku(self):
         print('\n')
@@ -50,18 +57,20 @@ class Sudoku :
         """
         # TODO ajouter backtracking_search, ac-3 et tout le reste pour effectuer le calcul
 
-    def check_constraints(self):
+        root = Tree.Tree(self.__sudoku)
+
+    def check_constraints(self, a_sudoku = __sudoku):
         """
         Fill the constraints list with all the grid constraints
         """
-        print("lines : " + str(self.__lines_are_correct()))
-        print("colum : " + str(self.__columns_are_correct()))
-        print("cases : " + str(self.__cases_are_correct()))
+        print("lines : " + str(self.__lines_are_correct(a_sudoku)))
+        print("colum : " + str(self.__columns_are_correct(a_sudoku)))
+        print("cases : " + str(self.__cases_are_correct(a_sudoku)))
 
-    def __lines_are_correct(self):
+    def __lines_are_correct(self, a_sudoku):
         is_ok = True
 
-        for a_line in self.__sudoku:
+        for a_line in a_sudoku:
             tmp = []
 
             for a_char in a_line:
@@ -73,16 +82,14 @@ class Sudoku :
 
         return is_ok
 
-    def __columns_are_correct(self):
+    def __columns_are_correct(self, a_sudoku):
         is_ok = True
 
-        sudoku = self.__sudoku
-
-        for x in range(len(sudoku[0])):
+        for x in range(len(a_sudoku[0])):
             tmp = []
 
-            for y in range(len(sudoku)):
-                a_char = sudoku[y][x]
+            for y in range(len(a_sudoku)):
+                a_char = a_sudoku[y][x]
 
                 if a_char is not ".":
                     if is_ok is True and a_char not in tmp:
@@ -92,6 +99,8 @@ class Sudoku :
 
         return is_ok
 
-    def __cases_are_correct(self):
+    def __cases_are_correct(self, a_sudoku):
+        # TODO
         is_ok = True
+
         return is_ok
