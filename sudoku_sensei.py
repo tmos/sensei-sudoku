@@ -1,58 +1,15 @@
-import Grid
-import os
-import time
+import sys
+import Sudoku
 
-
-def intro():
-
-    step1 = """ \n \n
-      sSSs   .S       S.    .S%%Ss        sSS%SSs      .S     S.   .S       S.
-     d%%SP  .SS       SS.  .SS~YS%%b    d%%SP~YS%%b   .SS    .SS  .SS       SS.
-    d%S'    S%S       S%S  S%S   `S%b  d%S'     `S%b  S%S    S&S  S%S       S%S
-    S%|     S%S       S%S  S%S    S%S  S%S       S%S  S%S    d*S  S%S       S%S
-    S&S     S&S       S&S  S%S    S&S  S&S       S&S  S&S   .S*'  S&S       S&S
-    Y&Ss    S&S       S&S  S&S    S&S  S&S       S&S  S&S_sdSS'   S&S       S&S
-    `S&&S   S&S       S&S  S&S    S&S  S&S       S&S  S&S~YSSY%b  S&S       S&S
-      `S*S  S&S       S&S  S&S    S&S  S&S       S&S  S&S    `S%  S&S       S&S
-       l*S  S*b       d*S  S*S    d*S  S*b       d*S  S*S     S%  S*b       d*S
-      .S*P  S*S.     .S*S  S*S   .S*S  S*S.     .S*S  S*S     S&  S*S.     .S*S
-    sSS*S    SSSbs_sdSSS   S*S_sdSSS    SSSbs_sdSSS   S*S     S&   SSSbs_sdSSS
-    YSS'      'YSS%SSY'    SSS~YSY       'YSS%SSY'    S*S     YSb.  'YSS%SSY'
-"""
-    step2 = step1 + """ \n
-          sSSs    sSSs   .S_sSSs      sSSs    sSSs   .S
-         d%%SP   d%%SP  .SS~YS%%b    d%%SP   d%%SP  .SS
-        d%S'    d%S'    S%S   `S%b  d%S'    d%S'    S%S
-        S%|     S%S     S%S    S%S  S%|     S%S     S%S
-        S&S     S&S     S%S    S&S  S&S     S&S     S&S
-        Y&Ss    S&S_Ss  S&S    S&S  Y&Ss    S&S_Ss  S&S
-        `S&&S   S&S~SP  S&S    S&S  `S&&S   S&S~SP  S&S
-          `S*S  S&S     S&S    S&S    `S*S  S&S     S&S
-           l*S  S*b     S*S    S*S     l*S  S*b     S*S
-          .S*P  S*S.    S*S    S*S    .S*P  S*S.    S*S
-        sSS*S    SSSbs  S*S    S*S  sSS*S    SSSbs  S*S
-        YSS'      YSSP  S*S    SSS  YSS'      YSSP  S*S
-    """
-
-    os.system('clear')
-    print(step1)
-    time.sleep(.5)
-    os.system('clear')
-    print(step2)
-    time.sleep(1)
-    os.system('clear')
 
 def main():
-    """intro()"""
-    # Create a new grid
-    grid = Grid.Grid()
-    # TODO set the original sudoku --> grid.set_sudoku()
-    # Display the start sudoku
-    grid.print_sudoku()
-    # Ikuzo!
-    grid.calculate()
-    # Display the resolved sudoku
-    grid.print_sudoku()
+    if len(sys.argv) is not 2:
+        print("You should pass the path to the sudoku file as an argument of the script.")
+        exit()
+
+    sudoku = Sudoku.Sudoku(sys.argv[1])
+    sudoku.print_sudoku()
+    sudoku.check_constraints()
 
 if __name__ == "__main__":
     main()
