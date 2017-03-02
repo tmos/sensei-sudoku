@@ -59,13 +59,16 @@ class Sudoku:
 
         root = Tree.Tree(self.__sudoku)
 
-    def check_constraints(self, a_sudoku = __sudoku):
+    def check_constraints(self, a_sudoku=__sudoku):
         """
         Fill the constraints list with all the grid constraints
         """
-        print("lines : " + str(self.__lines_are_correct(a_sudoku)))
-        print("colum : " + str(self.__columns_are_correct(a_sudoku)))
-        print("cases : " + str(self.__cases_are_correct(a_sudoku)))
+        if self.__lines_are_correct(a_sudoku) and\
+            self.__columns_are_correct(a_sudoku) and\
+            self.__cases_are_correct(a_sudoku):
+            return True
+        else:
+            return False
 
     def __lines_are_correct(self, a_sudoku):
         is_ok = True
@@ -100,7 +103,29 @@ class Sudoku:
         return is_ok
 
     def __cases_are_correct(self, a_sudoku):
-        # TODO
-        is_ok = True
 
-        return is_ok
+        def check_a_case(startx, starty):
+            case_is_ok = True
+            tmp = []
+
+            for x in range(startx, startx + 3):
+                for y in range(starty, starty + 3):
+                    a_char = a_sudoku[y][x]
+
+                    if a_char is not ".":
+                        if case_is_ok is True and a_char not in tmp:
+                            tmp.append(a_char)
+                        else:
+                            return False
+
+            return case_is_ok
+
+        all_cases_are_ok = True
+
+        if not check_a_case(0, 0) or not check_a_case(0, 3) or not check_a_case(0, 6) or\
+            not check_a_case(3, 0) or not check_a_case(3, 3) or not check_a_case(3, 6) or\
+            not check_a_case(6, 0) or not check_a_case(6, 3) or not check_a_case(6, 6):
+            all_cases_are_ok = False
+
+        return all_cases_are_ok
+

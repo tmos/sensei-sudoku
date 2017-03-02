@@ -2,7 +2,7 @@ import sys
 import Sudoku
 
 
-def main():
+if __name__ == "__main__":
     if len(sys.argv) is not 2:
         print("You should pass the path to the sudoku file as an argument of the script.")
         exit()
@@ -10,6 +10,3 @@ def main():
     sudoku = Sudoku.Sudoku(sys.argv[1])
     sudoku.print_sudoku()
     sudoku.check_constraints()
-
-if __name__ == "__main__":
-    main()
