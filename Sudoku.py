@@ -33,7 +33,7 @@ class Sudoku:
             case_count = 0
             for a_case in a_line:
 
-                tmp += '   ' + a_case
+                tmp += '   ' + str(a_case)
                 if case_count == 2 or case_count == 5:
                     tmp += '    '
 
@@ -50,14 +50,6 @@ class Sudoku:
 
     def get_sudoku(self):
         return self.__sudoku
-
-    def calculate(self):
-        """
-        Calculation to solve the sudoku problem
-        """
-        # TODO ajouter backtracking_search, ac-3 et tout le reste pour effectuer le calcul
-
-        root = Tree.Tree(self.__sudoku)
 
     def is_valid(self):
         """
@@ -175,7 +167,7 @@ class Sudoku:
 
         return forbidden_values
 
-    def get_least_constraints(self):
+    def get_least_constraint(self):
         best = {'yx': [-1, -1], 'score': 999}
 
         for y in range(len(self.__sudoku)):
@@ -184,7 +176,7 @@ class Sudoku:
                     how_much_constraints = len(self.get_forbidden_values_for(y, x))
 
                     if how_much_constraints < best['score']:
-                        best = {'yx': [y, x], 'score': how_much_constraints}
+                        best = {'y': y, 'x': x, 'score': how_much_constraints}
 
         return best
 
@@ -193,6 +185,50 @@ class Sudoku:
         base = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         return [item for item in base if item not in forbidden]
 
-    def set(self,y , x, val):
+    def set(self, y, x, val):
         self.__sudoku[y][x] = val
         return self.__sudoku
+
+    def hash(self):
+        res = ""
+        for line in self.__sudoku:
+            for char in line:
+                res += str(char)
+
+        return res
+
+    def is_resolved(self):
+
+        for line in self.__sudoku:
+            for val in line:
+                if val is 0:
+                    return False
+
+        if self.is_valid():
+            return True
+        else:
+            return False
+
+
+def resolve(tree=Tree.Tree, impasses=["000000000000000000000000000000000000000000000000000000000000000000000000000000000"]):
+    # OK, j'essaie de faire de la récursion. La structure d'arbre permet seulement de garder un lien vers le parent, au cas où on arrive dans une impasse.
+    # Si on veut virer la structure, suffit de renommer le premier argument en Sudoku, et de virer la ligne suivante
+    sudoku = tree.get_sudoku()
+
+    # Si tout le sudoku est fini, stop ici
+    if sudoku.is_resolved():
+        return sudoku
+    else:
+        sudoku.print_sudoku()
+        # On trouve notre prochain move
+        current_play = sudoku.get_least_constraint()
+        x = current_play['x']
+        y = current_play['y']
+        # On vérifie qu'on ne va pas rejouer un jeu menant dans une impasse
+        what_to_play = sudoku.get_possibilities_for(y, x)
+### Faire un truc avec les hash !
+        if len(what_to_play):
+            sudoku.set(current_play['y'], current_play['x'], what_to_play[0])
+            return resolve(Tree.Tree(Sudoku(sudoku.get_sudoku()), parent=tree))
+        else:
+            return resolve(tree.get_parent())

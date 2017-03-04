@@ -1,5 +1,6 @@
 import sys
 import Sudoku
+import Tree
 
 
 if __name__ == "__main__":
@@ -8,5 +9,4 @@ if __name__ == "__main__":
         exit()
 
     sudoku = Sudoku.Sudoku(sys.argv[1])
-    sudoku.print_sudoku()
-    sudoku.is_valid()
+    Sudoku.resolve(Tree.Tree(sudoku))

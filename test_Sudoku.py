@@ -99,7 +99,7 @@ def test_get_least_constraints():
         [7, 8, 0, 0, 0, 1, 0, 3, 6],
         [0, 0, 9, 0, 0, 0, 0, 0, 2]
     ])
-    assert(s.get_least_constraints() == {'score': 4, 'yx': [0, 4]})
+    assert(s.get_least_constraint() == {'score': 4, 'x': 4, 'y': 0})
 
 
 def test_get_possibilities_for():
@@ -115,6 +115,7 @@ def test_get_possibilities_for():
         [0, 0, 9, 0, 0, 0, 0, 0, 2]
     ])
     assert (s.get_possibilities_for(0, 1) == [1, 4, 7])
+
 
 def test_set():
     s = Sudoku.Sudoku([
@@ -140,3 +141,35 @@ def test_set():
         [7, 8, 0, 0, 0, 1, 0, 3, 6],
         [0, 0, 9, 0, 0, 0, 0, 0, 2]
     ])
+
+
+def test_break_sudoku():
+    s = Sudoku.Sudoku([
+        [8, 0, 0, 0, 0, 0, 6, 0, 0],
+        [9, 3, 0, 8, 0, 0, 0, 7, 1],
+        [0, 2, 5, 0, 6, 3, 8, 0, 0],
+        [0, 6, 1, 0, 0, 0, 0, 0, 0],
+        [0, 9, 8, 4, 5, 6, 3, 1, 0],
+        [0, 0, 0, 0, 0, 0, 4, 6, 0],
+        [0, 0, 3, 9, 8, 0, 7, 5, 0],
+        [7, 8, 0, 0, 0, 1, 0, 3, 6],
+        [0, 0, 9, 0, 0, 0, 0, 0, 2]
+    ])
+    assert(s.is_valid())
+    s.set(0, 1, 8)
+    assert (s.is_valid() is False)
+
+
+def test_hash():
+    s = Sudoku.Sudoku([
+        [8, 0, 0, 0, 0, 0, 6, 0, 0],
+        [9, 3, 0, 8, 0, 0, 0, 7, 1],
+        [0, 2, 5, 0, 6, 3, 8, 0, 0],
+        [0, 6, 1, 0, 0, 0, 0, 0, 0],
+        [0, 9, 8, 4, 5, 6, 3, 1, 0],
+        [0, 0, 0, 0, 0, 0, 4, 6, 0],
+        [0, 0, 3, 9, 8, 0, 7, 5, 0],
+        [7, 8, 0, 0, 0, 1, 0, 3, 6],
+        [0, 0, 9, 0, 0, 0, 0, 0, 2]
+    ])
+    assert(len(s.hash()) == 81)
