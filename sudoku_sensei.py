@@ -9,4 +9,4 @@ if __name__ == "__main__":
 
     sudoku = Sudoku.Sudoku(sys.argv[1])
     sudoku.print_sudoku()
-    sudoku.check_constraints()
+    sudoku.is_valid()

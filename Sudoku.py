@@ -17,7 +17,7 @@ class Sudoku:
 
                     for a_char in a_line:
                         if a_char != "\n":
-                            tmp.append(a_char)
+                                tmp.append(int(a_char))
 
                     self.__sudoku.append(tmp)
             else:
@@ -59,73 +59,140 @@ class Sudoku:
 
         root = Tree.Tree(self.__sudoku)
 
-    def check_constraints(self, a_sudoku=__sudoku):
+    def is_valid(self):
         """
         Fill the constraints list with all the grid constraints
         """
-        if self.__lines_are_correct(a_sudoku) and\
-            self.__columns_are_correct(a_sudoku) and\
-            self.__cases_are_correct(a_sudoku):
+
+        def __lines_are_correct(su):
+            is_ok = True
+
+            for a_line in su:
+                tmp = []
+
+                for a_char in a_line:
+                    if a_char is not 0:
+                        if is_ok is True and a_char not in tmp:
+                            tmp.append(a_char)
+                        else:
+                            is_ok = False
+
+            return is_ok
+
+        def __columns_are_correct(su):
+            is_ok = True
+
+            for x in range(len(su[0])):
+                tmp = []
+
+                for y in range(len(su)):
+                    a_char = su[y][x]
+
+                    if a_char is not 0:
+                        if is_ok is True and a_char not in tmp:
+                            tmp.append(a_char)
+                        else:
+                            is_ok = False
+
+            return is_ok
+
+        def __cases_are_correct(su):
+
+            def check_a_case(start_x, start_y):
+                case_is_ok = True
+                tmp = []
+
+                for x in range(start_x, start_x + 3):
+                    for y in range(start_y, start_y + 3):
+                        a_char = su[y][x]
+
+                        if a_char is not 0:
+                            if case_is_ok is True and a_char not in tmp:
+                                tmp.append(a_char)
+                            else:
+                                return False
+
+                return case_is_ok
+
+            all_cases_are_ok = True
+
+            if not check_a_case(0, 0) or not check_a_case(0, 3) or not check_a_case(0, 6) or \
+                    not check_a_case(3, 0) or not check_a_case(3, 3) or not check_a_case(3, 6) or \
+                    not check_a_case(6, 0) or not check_a_case(6, 3) or not check_a_case(6, 6):
+                all_cases_are_ok = False
+
+            return all_cases_are_ok
+
+        if __lines_are_correct(self.__sudoku) and\
+            __columns_are_correct(self.__sudoku) and\
+                __cases_are_correct(self.__sudoku):
             return True
         else:
             return False
 
-    def __lines_are_correct(self, a_sudoku):
-        is_ok = True
+    def get_forbidden_values_for(self, y, x):
+        if self.__sudoku[y][x] != 0:
+            return None
 
-        for a_line in a_sudoku:
-            tmp = []
+        forbidden_values = []
 
-            for a_char in a_line:
-                if a_char is not ".":
-                    if is_ok is True and a_char not in tmp:
-                        tmp.append(a_char)
-                    else:
-                        is_ok = False
+        # check column
+        for iter_y in range(len(self.__sudoku[y])):
+                a_char = self.__sudoku[iter_y][x]
+                if a_char is not 0 and a_char not in forbidden_values:
+                    forbidden_values.append(a_char)
 
-        return is_ok
+        # check line
+        for iter_x in range(len(self.__sudoku[x])):
+            a_char = self.__sudoku[y][iter_x]
+            if a_char is not 0 and a_char not in forbidden_values:
+                forbidden_values.append(a_char)
 
-    def __columns_are_correct(self, a_sudoku):
-        is_ok = True
+        # check case
+        start_x = 0
+        start_y = 0
+        # Compute in which square the value is
+        if x < 3:
+            start_x = 0
+        elif x < 6:
+            start_x = 3
+        elif x < 9:
+            start_x = 6
 
-        for x in range(len(a_sudoku[0])):
-            tmp = []
+        if y < 3:
+            start_y = 0
+        elif x < 6:
+            start_y = 3
+        elif x < 9:
+            start_y = 6
 
-            for y in range(len(a_sudoku)):
-                a_char = a_sudoku[y][x]
+        for x in range(start_x, start_x + 3):
+            for y in range(start_y, start_y + 3):
+                a_char = self.__sudoku[y][x]
 
-                if a_char is not ".":
-                    if is_ok is True and a_char not in tmp:
-                        tmp.append(a_char)
-                    else:
-                        is_ok = False
+                if a_char is not 0 and a_char not in forbidden_values:
+                    forbidden_values.append(a_char)
 
-        return is_ok
+        return forbidden_values
 
-    def __cases_are_correct(self, a_sudoku):
+    def get_least_constraints(self):
+        best = {'yx': [-1, -1], 'score': 999}
 
-        def check_a_case(startx, starty):
-            case_is_ok = True
-            tmp = []
+        for y in range(len(self.__sudoku)):
+            for x in range(len(self.__sudoku[0])):
+                if self.get_forbidden_values_for(y, x):
+                    how_much_constraints = len(self.get_forbidden_values_for(y, x))
 
-            for x in range(startx, startx + 3):
-                for y in range(starty, starty + 3):
-                    a_char = a_sudoku[y][x]
+                    if how_much_constraints < best['score']:
+                        best = {'yx': [y, x], 'score': how_much_constraints}
 
-                    if a_char is not ".":
-                        if case_is_ok is True and a_char not in tmp:
-                            tmp.append(a_char)
-                        else:
-                            return False
+        return best
 
-            return case_is_ok
+    def get_possibilities_for(self, y, x):
+        forbidden = self.get_forbidden_values_for(y, x)
+        base = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        return [item for item in base if item not in forbidden]
 
-        all_cases_are_ok = True
-
-        if not check_a_case(0, 0) or not check_a_case(0, 3) or not check_a_case(0, 6) or\
-            not check_a_case(3, 0) or not check_a_case(3, 3) or not check_a_case(3, 6) or\
-            not check_a_case(6, 0) or not check_a_case(6, 3) or not check_a_case(6, 6):
-            all_cases_are_ok = False
-
-        return all_cases_are_ok
-
+    def set(self,y , x, val):
+        self.__sudoku[y][x] = val
+        return self.__sudoku
