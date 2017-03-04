@@ -1,9 +1,11 @@
 import Sudoku
 
+
 def test_good_sudoku_from_file():
     s = Sudoku.Sudoku("sudoku_games_files/sudoku_easy_01")
     assert type(s) is Sudoku.Sudoku
     assert s.is_valid() is True
+
 
 def test_good_sudoku_from_array():
     s = Sudoku.Sudoku([
@@ -20,6 +22,7 @@ def test_good_sudoku_from_array():
     assert type(s) is Sudoku.Sudoku
     assert s.is_valid() is True
 
+
 def test_bad_line():
     # bad line = line 1
     s = Sudoku.Sudoku([
@@ -35,6 +38,7 @@ def test_bad_line():
     ])
     assert s.is_valid() is False
 
+
 def test_bad_col():
     # bad col = col 1
     s = Sudoku.Sudoku([
@@ -49,6 +53,7 @@ def test_bad_col():
             [0, 0, 9, 0, 0, 0, 0, 0, 2]
     ])
     assert s.is_valid() is False
+
 
 def test_bad_square():
     # bad square = 1, 1
