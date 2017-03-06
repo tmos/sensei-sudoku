@@ -9,7 +9,11 @@ class Sudoku:
 
         if type(source) is list:
             self.__sudoku = source
+
+            if self.is_valid() is not True:
+                exit("Sudoku is not valid")
         else:
+            self.__sudoku = []
             file = open(source, "r")
             if file:
                 for a_line in file.readlines():
@@ -123,10 +127,10 @@ class Sudoku:
             return False
 
     def get_forbidden_values_for(self, y, x):
-        if self.__sudoku[y][x] != 0:
-            return None
-
         forbidden_values = []
+
+        if self.__sudoku[y][x] > 0:
+            return [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
         # check column
         for iter_y in range(len(self.__sudoku[y])):
@@ -153,9 +157,9 @@ class Sudoku:
 
         if y < 3:
             start_y = 0
-        elif x < 6:
+        elif y < 6:
             start_y = 3
-        elif x < 9:
+        elif y < 9:
             start_y = 6
 
         for x in range(start_x, start_x + 3):
@@ -167,25 +171,33 @@ class Sudoku:
 
         return forbidden_values
 
-    def get_least_constraint(self):
-        best = {'yx': [-1, -1], 'score': 999}
+    def get_remaining_values(self):
+        # We take the cell with the biggest amount of forbidden values
+        selected_cell = {'y': -1, 'x': -1, 'score': -1}
 
         for y in range(len(self.__sudoku)):
             for x in range(len(self.__sudoku[0])):
-                if self.get_forbidden_values_for(y, x):
-                    how_much_constraints = len(self.get_forbidden_values_for(y, x))
+                if self.__sudoku[y][x] == 0:
+                    how_many_constraints = len(self.get_forbidden_values_for(y, x))
+                    if how_many_constraints > selected_cell['score']:
+                        selected_cell = {'y': y, 'x': x, 'score': how_many_constraints}
 
-                    if how_much_constraints < best['score']:
-                        best = {'y': y, 'x': x, 'score': how_much_constraints}
-
-        return best
+        return selected_cell
 
     def get_possibilities_for(self, y, x):
         forbidden = self.get_forbidden_values_for(y, x)
         base = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        return [item for item in base if item not in forbidden]
+        tmp = []
+        for val in base:
+            if val not in forbidden:
+                tmp.append(val)
+
+        return tmp
 
     def set(self, y, x, val):
+        if self.__sudoku[y][x] > 0:
+            print("NOPE : " + str(self.__sudoku[y][x]))
+
         self.__sudoku[y][x] = val
         return self.__sudoku
 
@@ -198,38 +210,42 @@ class Sudoku:
         return res
 
     def is_resolved(self):
-
-        for line in self.__sudoku:
-            for val in line:
-                if val is 0:
-                    return False
-
         if self.is_valid():
+            for line in self.__sudoku:
+                for val in line:
+                    if val is 0:
+                        return False
             return True
         else:
             return False
 
+log = []
+
 
 def resolve(sudoku):
-    # OK, j'essaie de faire de la récursion. La structure d'arbre permet seulement de garder un lien vers le parent, au cas où on arrive dans une impasse.
-    # Si on veut virer la structure, suffit de renommer le premier argument en Sudoku, et de virer la ligne suivante
+    sudoku.print_sudoku()
 
-    # Si tout le sudoku est fini, stop ici
     if sudoku.is_resolved():
-        sudoku.print_sudoku()
+        print("finito !")
         return sudoku
     else:
-        # On trouve notre prochain move
-        current_play = sudoku.get_least_constraint()
+        current_play = sudoku.get_remaining_values()
+
         x = current_play['x']
         y = current_play['y']
-        # On vérifie qu'on ne va pas rejouer un jeu menant dans une impasse
+
         what_to_play = sudoku.get_possibilities_for(y, x)
 
         if len(what_to_play):
             for move in what_to_play:
-                s = Sudoku(sudoku.get_sudoku())
-                s.set(current_play['y'], current_play['x'], move)
-                return resolve(Sudoku(sudoku.get_sudoku()))
+                new_sudoku = Sudoku(sudoku.get_sudoku())
+                new_sudoku.set(y, x, move)
+
+                log.append({'sudoku': new_sudoku.get_sudoku(), 'x': x, 'y': y, 'new_val': move})
+
+                res = resolve(Sudoku(sudoku.get_sudoku()))
+                if res is not None:
+                    print("yeah")
         else:
-            print("bloqué :(")
+            log.append("FAIL")
+            return None
