@@ -210,25 +210,26 @@ class Sudoku:
             return False
 
 
-def resolve(tree=Tree.Tree, impasses=["000000000000000000000000000000000000000000000000000000000000000000000000000000000"]):
+def resolve(sudoku):
     # OK, j'essaie de faire de la récursion. La structure d'arbre permet seulement de garder un lien vers le parent, au cas où on arrive dans une impasse.
     # Si on veut virer la structure, suffit de renommer le premier argument en Sudoku, et de virer la ligne suivante
-    sudoku = tree.get_sudoku()
 
     # Si tout le sudoku est fini, stop ici
     if sudoku.is_resolved():
+        sudoku.print_sudoku()
         return sudoku
     else:
-        sudoku.print_sudoku()
         # On trouve notre prochain move
         current_play = sudoku.get_least_constraint()
         x = current_play['x']
         y = current_play['y']
         # On vérifie qu'on ne va pas rejouer un jeu menant dans une impasse
         what_to_play = sudoku.get_possibilities_for(y, x)
-### Faire un truc avec les hash !
+
         if len(what_to_play):
-            sudoku.set(current_play['y'], current_play['x'], what_to_play[0])
-            return resolve(Tree.Tree(Sudoku(sudoku.get_sudoku()), parent=tree))
+            for move in what_to_play:
+                s = Sudoku(sudoku.get_sudoku())
+                s.set(current_play['y'], current_play['x'], move)
+                return resolve(Sudoku(sudoku.get_sudoku()))
         else:
-            return resolve(tree.get_parent())
+            print("bloqué :(")

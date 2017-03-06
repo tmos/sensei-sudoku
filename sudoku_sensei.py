@@ -9,4 +9,4 @@ if __name__ == "__main__":
         exit()
 
     sudoku = Sudoku.Sudoku(sys.argv[1])
-    Sudoku.resolve(Tree.Tree(sudoku))
+    Sudoku.resolve(sudoku)
