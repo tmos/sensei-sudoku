@@ -1,6 +1,5 @@
 import sys
 import Sudoku
-import Tree
 
 #sys.setrecursionlimit(999999999)  # Disable stack size limit
 
@@ -9,5 +8,9 @@ if __name__ == "__main__":
         print("You should pass the path to the sudoku file as an argument of the script.")
         exit()
 
-    s = Sudoku.Sudoku(sys.argv[1])
-    Sudoku.resolve(s)
+    base = Sudoku.Sudoku(sys.argv[1])
+    print("base :")
+    base.print_sudoku()
+    res = Sudoku.resolve(base)
+    print("res :")
+    res.print_sudoku()

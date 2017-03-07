@@ -99,7 +99,7 @@ def test_get_least_constraints():
         [7, 8, 0, 0, 0, 1, 0, 3, 6],
         [0, 0, 9, 0, 0, 0, 0, 0, 2]
     ])
-    assert(s.get_remaining_values() == {'score': 4, 'x': 4, 'y': 0})
+    assert(s.get_mrv_cell() == {'score': 4, 'x': 4, 'y': 0})
 
 
 def test_get_possibilities_for():

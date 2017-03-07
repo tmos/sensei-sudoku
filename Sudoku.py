@@ -1,6 +1,3 @@
-import Tree
-
-
 class Sudoku:
 
     __sudoku = []
@@ -8,7 +5,7 @@ class Sudoku:
     def __init__(self, source):
 
         if type(source) is list:
-            self.__sudoku = source
+            self.__sudoku = source.copy()
 
             if self.is_valid() is not True:
                 exit("Sudoku is not valid")
@@ -171,7 +168,7 @@ class Sudoku:
 
         return forbidden_values
 
-    def get_remaining_values(self):
+    def get_mrv_cell(self):
         # We take the cell with the biggest amount of forbidden values
         selected_cell = {'y': -1, 'x': -1, 'score': -1}
 
@@ -196,8 +193,17 @@ class Sudoku:
 
     def set(self, y, x, val):
         if self.__sudoku[y][x] > 0:
-            print("NOPE : " + str(self.__sudoku[y][x]))
-
+            """
+            print("--------")
+            print("NOPE ! ")
+            self.print_sudoku()
+            print("y : " + str(y))
+            print("x : " + str(x))
+            print("val : " + str(val))
+            print("remaining : ")
+            print(self.get_remaining_values())
+            print("--------")
+            """
         self.__sudoku[y][x] = val
         return self.__sudoku
 
@@ -219,33 +225,27 @@ class Sudoku:
         else:
             return False
 
-log = []
-
 
 def resolve(sudoku):
-    sudoku.print_sudoku()
 
     if sudoku.is_resolved():
-        print("finito !")
         return sudoku
     else:
-        current_play = sudoku.get_remaining_values()
+        mrv_cell = sudoku.get_mrv_cell()
 
-        x = current_play['x']
-        y = current_play['y']
+        x = mrv_cell['x']
+        y = mrv_cell['y']
 
-        what_to_play = sudoku.get_possibilities_for(y, x)
+        possibilities = sudoku.get_possibilities_for(y, x)
 
-        if len(what_to_play):
-            for move in what_to_play:
-                new_sudoku = Sudoku(sudoku.get_sudoku())
-                new_sudoku.set(y, x, move)
+        if len(possibilities):
 
-                log.append({'sudoku': new_sudoku.get_sudoku(), 'x': x, 'y': y, 'new_val': move})
+            for possibility in possibilities:
+                sudoku.set(y, x, possibility)
+                res = resolve(sudoku)
 
-                res = resolve(Sudoku(sudoku.get_sudoku()))
                 if res is not None:
-                    print("yeah")
+                    return res
         else:
-            log.append("FAIL")
+            print("FAIL")
             return None
