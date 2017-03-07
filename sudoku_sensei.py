@@ -11,6 +11,6 @@ if __name__ == "__main__":
     base = Sudoku.Sudoku(sys.argv[1])
     print("base :")
     base.print_sudoku()
-    res = Sudoku.resolve(base)
+    Sudoku.resolve(base)
     print("res :")
-    res.print_sudoku()
+    base.print_sudoku()

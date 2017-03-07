@@ -227,9 +227,8 @@ class Sudoku:
 
 
 def resolve(sudoku):
-
     if sudoku.is_resolved():
-        return sudoku
+        return True
     else:
         mrv_cell = sudoku.get_mrv_cell()
 
@@ -244,8 +243,8 @@ def resolve(sudoku):
                 sudoku.set(y, x, possibility)
                 res = resolve(sudoku)
 
-                if res is not None:
+                if res is True:
                     return res
         else:
             print("FAIL")
-            return None
+            return False
